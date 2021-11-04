@@ -4,11 +4,11 @@ A tool to convert tiddlers in a JSON source to multiple Markdown files, one per 
 
 ## Usage
 
-**Warning 1:** this tool overwrites the contents of the output folder in case of name conflicts with new note files being generated. Be careful.
-
-**Warning 2:** the output folder will be created in case it does not exist already.
-
 ### Steps
+
+**Warning 1:** This tool overwrites the contents of the output folder in case of name conflicts with new note files being generated. Be careful.
+
+**Warning 2:** The output folder will be created in case it does not exist already.
 
 1. Generate the JSON file with your wiki's content via the `Export all > JSON` option on TiddlyWiki's `More actions` menu.
 2. Run the tool.
