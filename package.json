@@ -1,8 +1,11 @@
 {
-  "name": "tw-json-to-markdown",
+  "name": "tw-json-tiddlers-to-md-files",
   "version": "0.1.0",
   "description": "A tool to convert tiddlers in a JSON source to multiple Markdown files, one per tiddler.",
   "main": "index.js",
+  "bin": {
+    "tw-json-tiddlers-to-md-files": "./bin/run"
+  },
   "scripts": {
     "run": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -10,6 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "command-line-args": "^5.2.0",
     "fs-extra": "^10.0.0",
     "sanitize-filename": "^1.6.3"
   }
