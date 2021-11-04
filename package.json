@@ -1,0 +1,16 @@
+{
+  "name": "tw-json-to-markdown",
+  "version": "0.1.0",
+  "description": "A tool to convert tiddlers in a JSON source to multiple Markdown files, one per tiddler.",
+  "main": "index.js",
+  "scripts": {
+    "run": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "fs-extra": "^10.0.0",
+    "sanitize-filename": "^1.6.3"
+  }
+}
