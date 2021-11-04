@@ -1,29 +1,47 @@
+#!/usr/bin/env node
+const commandLineArgs = require("command-line-args");
 const sanitize = require("sanitize-filename");
 const fs = require("fs-extra");
 
-// This will be substituted by CLI arguments. The current values are useful default options.
-const config = {
-  inputJSONFile: "tiddlers.json",
-  outputFolder: "output",
-  verboseMode: false,
-};
+const optionDefinitions = [
+  { name: "verbose", alias: "v", type: Boolean, defaultValue: false },
+  {
+    name: "input",
+    alias: "i",
+    type: String,
+    multiple: false,
+    defaultValue: "tiddlers.json",
+  },
+  {
+    name: "output",
+    alias: "o",
+    type: String,
+    multiple: false,
+    defaultValue: "output",
+  },
+];
 
 let successCount = 0;
 let writingErrorCount = 0;
 
-convertTiddlerJSONToMDFiles();
+const config = commandLineArgs(optionDefinitions);
+main();
+
+function main() {
+  convertTiddlerJSONToMDFiles();
+}
 
 async function convertTiddlerJSONToMDFiles() {
-  console.log(`Processing tiddlers from: ${config.inputJSONFile}...`);
+  console.log(`Processing tiddlers from: ${config.input}...`);
   try {
-    await fs.ensureDir(`${__dirname}\\${config.outputFolder}\\`);
-    if (config.verboseMode) {
-      console.log(`Output folder created at ${config.outputFolder}.`);
+    await fs.ensureDir(`${__dirname}\\${config.output}\\`);
+    if (config.verbose) {
+      console.log(`Output folder created at ${config.output}.`);
     }
-    const tiddlers = await fs.readJSON(config.inputJSONFile);
+    const tiddlers = await fs.readJSON(config.input);
     const contentOperations = tiddlers.map(prepareFileContent);
     const filesReadyToWrite = await Promise.all(contentOperations);
-    if (config.verboseMode) {
+    if (config.verbose) {
       console.log("Finished preparing tiddlers.");
     }
     const writingOperations = [];
@@ -32,7 +50,7 @@ async function convertTiddlerJSONToMDFiles() {
     });
     await Promise.all(writingOperations);
     console.log(
-      `Converted ${successCount} tiddlers to Markdown files.\nThere were ${writingErrorCount} writing errors to report.\nCheck your \'${config.outputFolder}\' folder.`
+      `Converted ${successCount} tiddlers to Markdown files.\nThere were ${writingErrorCount} writing errors to report.\nCheck your \'${config.output}\' folder.`
     );
   } catch (error) {
     throw new Error("The script found a critical error and had to stop.");
@@ -40,7 +58,7 @@ async function convertTiddlerJSONToMDFiles() {
 }
 
 async function prepareFileContent(tiddler) {
-  if (config.verboseMode) {
+  if (config.verbose) {
     console.log("Preparing tiddler: " + tiddler.title + "...");
   }
   let body = "";
@@ -70,14 +88,11 @@ async function prepareFileContent(tiddler) {
 async function writeMDFile(title, content) {
   let filename = sanitize(title);
   try {
-    if (config.verboseMode) {
+    if (config.verbose) {
       console.log(`Writing MD file: ${filename}...`);
     }
     return fs
-      .writeFile(
-        `${__dirname}\\${config.outputFolder}\\${filename}.md`,
-        content
-      )
+      .writeFile(`${__dirname}\\${config.output}\\${filename}.md`, content)
       .then(() => {
         successCount++;
       });
