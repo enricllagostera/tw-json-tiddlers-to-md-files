@@ -20,16 +20,12 @@ const optionDefinitions = [
     defaultValue: "output",
   },
 ];
+const config = commandLineArgs(optionDefinitions);
 
 let successCount = 0;
 let writingErrorCount = 0;
 
-const config = commandLineArgs(optionDefinitions);
-main();
-
-function main() {
-  convertTiddlerJSONToMDFiles();
-}
+convertTiddlerJSONToMDFiles();
 
 async function convertTiddlerJSONToMDFiles() {
   console.log(`Processing tiddlers from: ${config.input}...`);
@@ -71,12 +67,17 @@ async function prepareFileContent(tiddler) {
       } else if (key == "tags") {
         let all = parseStringArray(tiddler[key], false);
         let underscored = all.join(",").replace(/ /g, "_").toLowerCase();
-        yamlFrontmatter += "keywords : [ " + underscored + " ]\n";
+        yamlFrontmatter += "tags : [ " + underscored + " ]\n";
       } else {
-        yamlFrontmatter += key + ': "' + element + '"\n';
+        yamlFrontmatter += key + ": \'" + element + "\'\n";
       }
     }
   }
+  // Add an 'aliases' field to front matter that copies the title to make it compatible with Obsidian
+  if (tiddler.title !== sanitize(tiddler.title))
+  {
+    yamlFrontmatter += `aliases: [ \'${tiddler.title}\' ]\n`
+  } 
   yamlFrontmatter += "---\n";
   let content = yamlFrontmatter + body;
   return {

@@ -8,6 +8,7 @@
   },
   "scripts": {
     "run": "node index.js",
+    "split": "node split_json.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -15,6 +16,7 @@
   "dependencies": {
     "command-line-args": "^5.2.0",
     "fs-extra": "^10.0.0",
-    "sanitize-filename": "^1.6.3"
+    "sanitize-filename": "^1.6.3",
+    "split-array": "^1.0.1"
   }
 }
